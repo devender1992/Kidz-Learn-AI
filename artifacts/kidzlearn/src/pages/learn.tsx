@@ -16,6 +16,21 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+const INAPPROPRIATE_KEYWORDS = [
+  'porn', 'pornography', 'pornographic', 'xxx', 'nude', 'nudity', 'naked', 'sex', 'sexual',
+  'intercourse', 'masturbat', 'orgasm', 'erotic', 'fetish', 'adultery', 'affair', 'infidelity',
+  'prostitut', 'escort', 'strip', 'stripper', 'genitals', 'penis', 'vagina', 'breast', 'nipple',
+  'condom', 'vibrator', 'dildo', 'bdsm', 'kink', 'horny', 'sexy', 'seduct', 'seduce',
+  'rape', 'molest', 'abuse', 'assault', 'harassment', 'incest', 'pedophil', 'predator',
+  'gore', 'torture', 'suicide', 'self-harm', 'drug', 'cocaine', 'heroin', 'methamphetamin',
+  'terrorist', 'bomb making', 'weapon', 'kill', 'murder', 'hate speech', 'racist',
+];
+
+function detectInappropriateContent(text: string): boolean {
+  const lowerText = text.toLowerCase();
+  return INAPPROPRIATE_KEYWORDS.some(kw => lowerText.includes(kw));
+}
+
 function detectOffTopic(text: string, currentSubjectId: string): { offTopic: boolean; suggestedSubject?: (typeof SUBJECTS)[0] } {
   const lowerText = text.toLowerCase();
   // General Knowledge is open-ended — never flag it as off-topic
@@ -67,6 +82,14 @@ export default function Learn() {
     if (!text.trim() || isStreaming) return;
     
     setTopicError(null);
+
+    // Block inappropriate / adult content first
+    if (detectInappropriateContent(text)) {
+      setTopicError({
+        message: "🚫 That kind of content is not allowed here. Kidz Learn AI is a safe learning space for students. Please ask an educational question!",
+      });
+      return;
+    }
 
     // Check if the question is about a different subject
     const check = detectOffTopic(text, subject.id);
