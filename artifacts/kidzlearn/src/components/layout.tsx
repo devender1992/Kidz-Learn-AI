@@ -28,7 +28,7 @@ export function Layout({ children }: { children: ReactNode }) {
             </div>
             <div>
               <h1 className="font-display font-extrabold text-2xl text-foreground leading-none tracking-tight group-hover:text-primary transition-colors">
-                Kidz<span className="text-secondary">Learn</span><span className="text-accent ml-1">AI</span>
+                Kidz<span className="text-secondary"> Learn</span><span className="text-accent ml-1"> AI</span>
               </h1>
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Your Smart Tutor</p>
             </div>
