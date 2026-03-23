@@ -16,6 +16,35 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+function detectOffTopic(text: string, currentSubjectId: string): { offTopic: boolean; suggestedSubject?: (typeof SUBJECTS)[0] } {
+  const lowerText = text.toLowerCase();
+  // General Knowledge is open-ended — never flag it as off-topic
+  if (currentSubjectId === 'general-knowledge') return { offTopic: false };
+
+  let bestMatch: (typeof SUBJECTS)[0] | undefined;
+  let bestScore = 0;
+
+  for (const subject of SUBJECTS) {
+    if (subject.id === currentSubjectId || subject.id === 'general-knowledge') continue;
+    const score = subject.keywords.filter(kw => lowerText.includes(kw.toLowerCase())).length;
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = subject;
+    }
+  }
+
+  // Check how many keywords the current subject matches
+  const currentSubject = SUBJECTS.find(s => s.id === currentSubjectId);
+  const currentScore = currentSubject?.keywords.filter(kw => lowerText.includes(kw.toLowerCase())).length ?? 0;
+
+  // Flag as off-topic only if another subject scores significantly higher
+  if (bestMatch && bestScore >= 2 && bestScore > currentScore) {
+    return { offTopic: true, suggestedSubject: bestMatch };
+  }
+
+  return { offTopic: false };
+}
+
 export default function Learn() {
   const { subject: subjectId } = useParams<{ subject: string }>();
   const subject = SUBJECTS.find(s => s.id === subjectId) || SUBJECTS[0];
@@ -23,6 +52,7 @@ export default function Learn() {
   const [question, setQuestion] = useState("");
   const [ageGroup, setAgeGroup] = useState("10-12");
   const [conversationId, setConversationId] = useState<number | undefined>();
+  const [topicError, setTopicError] = useState<{ message: string; subject?: (typeof SUBJECTS)[0] } | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
   
   const { mutateAsync: createConversation } = useCreateOpenaiConversation();
@@ -36,6 +66,18 @@ export default function Learn() {
   const handleAsk = async (text: string) => {
     if (!text.trim() || isStreaming) return;
     
+    setTopicError(null);
+
+    // Check if the question is about a different subject
+    const check = detectOffTopic(text, subject.id);
+    if (check.offTopic && check.suggestedSubject) {
+      setTopicError({
+        message: `This looks like a ${check.suggestedSubject.name} question! Please ask only ${subject.name} questions here.`,
+        subject: check.suggestedSubject,
+      });
+      return;
+    }
+
     setQuestion("");
     
     // Create conversation context if first message
@@ -52,7 +94,7 @@ export default function Learn() {
 
     await sendMessage(text, {
       subject: subject.name,
-      topic: "General", // Could be refined if clicking a specific chip
+      topic: "General",
       ageGroup,
       conversationId: currentConvId
     });
@@ -202,7 +244,21 @@ export default function Learn() {
 
           {/* Input Area */}
           <div className="p-4 sm:p-6 bg-white/50 border-t border-border/50 backdrop-blur-sm">
-            {error && (
+            {topicError && (
+              <div className="mb-3 p-3 bg-amber-50 text-amber-800 rounded-xl text-sm font-semibold border border-amber-200 flex items-start gap-2">
+                <span className="shrink-0 mt-0.5">🚫</span>
+                <span className="flex-1">{topicError.message}</span>
+                {topicError.subject && (
+                  <a
+                    href={`${import.meta.env.BASE_URL}learn/${topicError.subject.id}`}
+                    className="shrink-0 underline text-amber-700 hover:text-amber-900 font-bold"
+                  >
+                    Go to {topicError.subject.name} →
+                  </a>
+                )}
+              </div>
+            )}
+            {error && !topicError && (
               <div className="mb-3 p-3 bg-red-50 text-red-600 rounded-xl text-sm font-medium border border-red-100 flex items-start gap-2">
                 <span className="shrink-0 mt-0.5">⚠️</span> {error}
               </div>
@@ -226,7 +282,7 @@ export default function Learn() {
               <div className="flex-1 relative bg-white rounded-2xl shadow-inner border-2 border-border focus-within:border-primary/50 focus-within:ring-4 ring-primary/10 transition-all">
                 <textarea
                   value={question}
-                  onChange={(e) => setQuestion(e.target.value)}
+                  onChange={(e) => { setQuestion(e.target.value); if (topicError) setTopicError(null); }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
