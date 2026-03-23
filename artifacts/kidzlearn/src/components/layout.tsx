@@ -52,11 +52,27 @@ export function Layout({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <footer className="bg-white border-t border-border mt-auto py-8 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-muted-foreground font-medium">
-          <p className="flex items-center justify-center gap-2">
-            Built with <span className="text-destructive animate-pulse">❤️</span> for curious minds everywhere.
-          </p>
+      <footer className="bg-foreground mt-auto py-10 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
+                <Brain className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-display font-extrabold text-white text-lg">Kidz <span className="text-secondary">Learn</span> <span className="text-accent">AI</span></span>
+            </div>
+            <p className="text-gray-400 font-medium text-sm flex items-center gap-1.5">
+              Built with <span className="text-red-400">❤️</span> for curious minds everywhere.
+            </p>
+            <div className="flex items-center gap-6 text-sm font-semibold">
+              <a href="/#terms" className="text-gray-400 hover:text-white transition-colors">Terms &amp; Conditions</a>
+              <span className="text-gray-600">•</span>
+              <a href="/#privacy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+            </div>
+          </div>
+          <div className="mt-6 pt-6 border-t border-white/10 text-center text-xs text-gray-500 font-medium">
+            © {new Date().getFullYear()} Kidz Learn AI. For educational use only. Ages 10–18.
+          </div>
         </div>
       </footer>
     </div>
