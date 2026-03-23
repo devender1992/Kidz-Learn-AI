@@ -1,0 +1,18 @@
+packages:
+  "framer-motion": "For playful, energetic animations and page transitions"
+  "react-markdown": "To render AI responses with formatting (bold, lists, etc.)"
+  "remark-gfm": "Plugin for react-markdown to support tables and better lists"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility to merge tailwind classes without conflicts"
+
+images:
+  - path: "artifacts/kidzlearn/public/images/hero-bg.png"
+    description: "Vibrant, abstract 3D shapes floating in a colorful gradient background (purple, cyan, yellow), very playful and kid-friendly"
+    aspect_ratio: "16:9"
+  - path: "artifacts/kidzlearn/public/images/zara-robot.png"
+    description: "A cute, friendly, colorful 3D robot face, looking helpful and smart, white background"
+    aspect_ratio: "1:1"
+
+notes:
+  - The /api/learn/ask endpoint uses SSE. We will use a custom hook with native fetch + ReadableStream to parse the data chunks.
+  - Using a generated image for the AI avatar 'Zara' to give the app personality.

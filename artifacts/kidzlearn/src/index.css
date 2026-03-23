@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: 'Quicksand', sans-serif;
+  --font-display: 'Outfit', sans-serif;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+}
+
+:root {
+  /* Vibrant Light Theme */
+  --background: 240 25% 98%; /* Very light blueish gray */
+  --foreground: 222 47% 11%;
+  
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  
+  /* Bright energetic purple */
+  --primary: 262 83% 58%; 
+  --primary-foreground: 210 40% 98%;
+  
+  /* Fun Cyan/Teal */
+  --secondary: 189 94% 43%;
+  --secondary-foreground: 222 47% 11%;
+  
+  /* Soft background for muted elements */
+  --muted: 240 16% 94%;
+  --muted-foreground: 215 16% 47%;
+  
+  /* Bright Yellow/Orange */
+  --accent: 45 93% 47%;
+  --accent-foreground: 222 47% 11%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 262 83% 58%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply font-sans antialiased bg-background text-foreground selection:bg-primary/20 selection:text-primary;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    @apply tracking-tight;
+  }
+}
+
+/* Custom Utilities for that premium, playful feel */
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-xl shadow-black/5;
+  }
+  
+  .glass-card {
+    @apply bg-white/90 backdrop-blur-md border border-white shadow-xl shadow-primary/5 hover:shadow-primary/10 transition-all duration-300;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r;
+  }
+
+  .blob {
+    @apply absolute rounded-full filter blur-3xl opacity-30 animate-pulse;
+  }
+  
+  /* Markdown Styles for AI Responses */
+  .prose-kidz {
+    @apply max-w-none;
+  }
+  .prose-kidz p {
+    @apply mb-4 leading-relaxed;
+  }
+  .prose-kidz strong {
+    @apply font-bold text-foreground bg-primary/10 px-1 py-0.5 rounded-md;
+  }
+  .prose-kidz ul {
+    @apply list-disc pl-6 mb-4 space-y-2;
+  }
+  .prose-kidz ul li::marker {
+    @apply text-primary;
+  }
+  .prose-kidz h3 {
+    @apply text-xl font-bold mt-6 mb-3 text-primary font-display;
+  }
+  .prose-kidz code {
+    @apply bg-muted text-primary font-mono text-sm px-1.5 py-0.5 rounded-md;
+  }
+  .prose-kidz pre {
+    @apply bg-foreground text-background p-4 rounded-xl overflow-x-auto mb-4 font-mono text-sm shadow-inner;
+  }
+  .prose-kidz pre code {
+    @apply bg-transparent text-background p-0;
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(2deg); }
+  50% { transform: translateY(0px) rotate(0deg); }
+  75% { transform: translateY(10px) rotate(-2deg); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+.animate-float-delayed {
+  animation: float 6s ease-in-out infinite 3s;
+}
+
+@keyframes type {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.typing-dot {
+  animation: type 1.4s infinite ease-in-out both;
+}
+.typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-dot:nth-child(2) { animation-delay: -0.16s; }

@@ -8,3 +8,61 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface OpenaiConversation {
+  id: number;
+  title: string;
+  createdAt: string;
+}
+
+export interface OpenaiMessage {
+  id: number;
+  conversationId: number;
+  role: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface CreateOpenaiConversationBody {
+  title: string;
+}
+
+export interface SendOpenaiMessageBody {
+  content: string;
+}
+
+export interface OpenaiConversationWithMessages {
+  id: number;
+  title: string;
+  createdAt: string;
+  messages: OpenaiMessage[];
+}
+
+export interface OpenaiError {
+  error: string;
+}
+
+/**
+ * Age group to tailor explanation
+ */
+export type AskTutorBodyAgeGroup =
+  (typeof AskTutorBodyAgeGroup)[keyof typeof AskTutorBodyAgeGroup];
+
+export const AskTutorBodyAgeGroup = {
+  "10-12": "10-12",
+  "13-15": "13-15",
+  "16-18": "16-18",
+} as const;
+
+export interface AskTutorBody {
+  /** Subject category (Science, Math, etc.) */
+  subject: string;
+  /** The specific topic to learn about */
+  topic: string;
+  /** The student's question */
+  question: string;
+  /** Optional conversation ID for context */
+  conversationId?: number;
+  /** Age group to tailor explanation */
+  ageGroup?: AskTutorBodyAgeGroup;
+}
